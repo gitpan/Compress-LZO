@@ -24,5 +24,5 @@ WriteMakefile(
 		LIBS	 	=> [ "$LZO_LIB -llzo" ],
 	      	INC      	=> "$LZO_INCLUDE",
 		'dist'	 	=> {COMPRESS=>'gzip', SUFFIX=>'gz'},
-	     ) ;
+	     );
 

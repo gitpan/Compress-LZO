@@ -6,7 +6,8 @@
 ##
 ## This file is part of the LZO real-time data compression library.
 ##
-## Copyright (C) 1998 Markus Franz Xaver Johannes Oberhumer
+## Copyright (C) 1998-2002 Markus Franz Xaver Johannes Oberhumer
+## All Rights Reserved.
 ##
 ## The LZO library is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -24,7 +25,8 @@
 ## 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 ##
 ## Markus F.X.J. Oberhumer
-## markus.oberhumer@jk.uni-linz.ac.at
+## <markus@oberhumer.com>
+## http://www.oberhumer.com/opensource/lzo/
 ##
 ##---------------------------------------------------------------------------##
 
@@ -50,7 +52,7 @@ sub test {
 	$level = 1 unless $level;
 
 	my $a0 = Compress::LZO::adler32($src);
-	my $c =  Compress::LZO::compress($src,$level);
+	my $c =  Compress::LZO::compress($src, $level);
 	my $u1 = Compress::LZO::decompress($c);
 	my $a1 = Compress::LZO::adler32($u1);
 	my $o =  Compress::LZO::optimize($c);
@@ -71,13 +73,13 @@ sub main {
 	print "1..7\n";
 	$i = 1;
 	# compress some simple strings
-	&test($i++,"aaaaaaaaaaaaaaaaaaaaaaaa");
-	&test($i++,"abcabcabcabcabcabcabcabc");
-	&test($i++,"abcabcabcabcabcabcabcabc",9);
-	&test($i++," " x 131072);
-	&test($i++,"");
-	&test($i++,1234567);		# integer
-	&test($i++,3.1415e10);		# double
+	&test($i++, "aaaaaaaaaaaaaaaaaaaaaaaa");
+	&test($i++, "abcabcabcabcabcabcabcabc");
+	&test($i++, "abcabcabcabcabcabcabcabc", 9);
+	&test($i++, " " x 131072);
+	&test($i++, "");
+	&test($i++, 1234567);		# integer
+	&test($i++, 3.1415e10);		# double
 }
 
 

@@ -1,8 +1,13 @@
-#  LZO.pm --
+#  LZO.pm -- Perl bindings for the LZO data compression library
 #
 #  This file is part of the LZO real-time data compression library.
 #
+#  Copyright (C) 2002 Markus Franz Xaver Johannes Oberhumer
+#  Copyright (C) 2001 Markus Franz Xaver Johannes Oberhumer
+#  Copyright (C) 2000 Markus Franz Xaver Johannes Oberhumer
+#  Copyright (C) 1999 Markus Franz Xaver Johannes Oberhumer
 #  Copyright (C) 1998 Markus Franz Xaver Johannes Oberhumer
+#  All Rights Reserved.
 #
 #  The LZO library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License as
@@ -20,12 +25,15 @@
 #  59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
 #  Markus F.X.J. Oberhumer
-#  markus.oberhumer@jk.uni-linz.ac.at
+#  <markus@oberhumer.com>
+#  http://www.oberhumer.com/opensource/lzo/
 
 
 package Compress::LZO;
 
-require 5.003_05 ;
+$VERSION = "1.08";
+
+require 5.003_05;
 require Exporter;
 require DynaLoader;
 use AutoLoader;
@@ -48,9 +56,6 @@ use vars qw($VERSION @ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 	adler32 crc32
 	LZO_VERSION LZO_VERSION_STRING LZO_VERSION_DATE
 );
-
-
-$VERSION = "1.00";
 
 
 sub AUTOLOAD {
@@ -78,7 +83,7 @@ bootstrap Compress::LZO $VERSION;
 # Preloaded methods go here.
 
 
-1 ;
+1;
 # Autoload methods go after __END__, and are processed by the autosplit program.
 
 1;
@@ -89,7 +94,7 @@ __END__
 
 =head1 NAME
 
-Compress::LZO - Interface to LZO compression library
+Compress::LZO - Interface to the LZO compression library
 
 =head1 SYNOPSIS
 
@@ -125,7 +130,7 @@ $dest = Compress::LZO::compress($string, $level)
 Compress string, using the chosen compression level (either 1 or 9).
 Return a string containing the compressed data.
 
-On error I<undef> is returned.
+If the string is not compressible, I<undef> is returned.
 
 =head1 DECOMPRESSION FUNCTIONS
 
@@ -134,7 +139,7 @@ $dest = Compress::LZO::decompress($string)
 Decompress the data in string, returning a string containing the
 decompressed data.
 
-On error I<undef> is returned.
+On error (in case of corrupted data) I<undef> is returned.
 
 =head1 OPTIMIZATION FUNCTIONS
 
@@ -148,26 +153,33 @@ On error I<undef> is returned.
 =head1 CHECKSUM FUNCTIONS
 
 Two functions are provided by I<LZO> to calculate a checksum. For the
-Perl interface, the order of the two parameters in both functions has
+Perl interface the order of the two parameters in both functions has
 been reversed. This allows both running checksums and one off
 calculations to be done.
 
-    $crc = Compress::LZO::adler32($string [,$crc]) ;
-    $crc = Compress::LZO::crc32($string [,$crc]) ;
+    $crc = Compress::LZO::adler32($string [,$initialAdler]);
+    $crc = Compress::LZO::crc32($string [,$initialCrc]);
 
 =head1 AUTHOR
 
 The I<Compress::LZO> module was written by Markus F.X.J. Oberhumer
-F<markus.oberhumer@jk.uni-linz.ac.at>.
+F<markus@oberhumer.com>.
 The latest copy of the module should also be found on CPAN in
-F<modules/by-module/Compress/perl-lzo-x.x.tar.gz>.
+F<modules/by-module/Compress/Compress-LZO-x.y.tar.gz>.
 
 The I<LZO> compression library was written by Markus F.X.J. Oberhumer
-F<markus.oberhumer@jk.uni-linz.ac.at>.
+F<markus@oberhumer.com>.
 It is available from the LZO home page at
-F<http://wildsau.idv.uni-linz.ac.at/mfx/lzo.html>.
+F<http://www.oberhumer.com/opensource/lzo/>.
+
+The I<LZO> library and algorithms
+are Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002 by
+Markus Franz Xaver Johannes Oberhumer F<markus@oberhumer.com>.
+All Rights Reserved.
 
 =head1 MODIFICATION HISTORY
 
-1.00 First public release of I<Compress::LZO>.
+1.08  2002-08-29  Updated for Perl 5.8.0.
+
+1.00  1998-08-22  First public release of I<Compress::LZO>.
 

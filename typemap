@@ -2,6 +2,7 @@ const char *			T_PV
 lzo_byte *			T_PV
 lzo_bytep			T_PV
 lzo_bytepp			T_PV
+lzo_charp			T_PV
 lzo_void *			T_PV
 lzo_voidp			T_PV
 

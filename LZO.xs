@@ -1,8 +1,13 @@
-/* LZO.xs -- LZO bindings for Perl5
+/* LZO.xs -- Perl bindings for the LZO data compression library
 
    This file is part of the LZO real-time data compression library.
 
+   Copyright (C) 2002 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2001 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 2000 Markus Franz Xaver Johannes Oberhumer
+   Copyright (C) 1999 Markus Franz Xaver Johannes Oberhumer
    Copyright (C) 1998 Markus Franz Xaver Johannes Oberhumer
+   All Rights Reserved.
 
    The LZO library is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -20,30 +25,28 @@
    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
    Markus F.X.J. Oberhumer
-   markus.oberhumer@jk.uni-linz.ac.at
+   <markus@oberhumer.com>
+   http://www.oberhumer.com/opensource/lzo/
  */
-
 
 
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
 
-#if 0
-#include <lzo/lzo1x.h>
-#else
+#include <lzoconf.h>
 #include <lzo1x.h>
+
+#if !defined(LZO_VERSION) || (LZO_VERSION < 0x1070)
+#  error "Need LZO v1.07 or newer"
 #endif
 
-#if !defined(LZO_VERSION) || (LZO_VERSION < 0x1030)
-#  error "Need LZO v1.03 or newer"
-#endif
-
-#define UNUSED(x)       x = x
+#undef UNUSED
+#define UNUSED(x)       ((void)&x)
 
 
 /* If the buffer is a reference, dereference it */
-static SV *deRef(SV *sv, char *method)
+static SV *deRef(SV *sv, const char *method)
 {
 	SV *last_sv = NULL;
 	while (SvROK(sv) && sv != last_sv)
@@ -53,11 +56,11 @@ static SV *deRef(SV *sv, char *method)
 	}
 	if (!SvOK(sv))
 		croak("Compress::LZO::%s: buffer parameter is not a SCALAR", method);
-	return sv ;
+	return sv;
 }
 
 
-static double constant(char *name, int arg)
+static double constant(const char *name, int arg)
 {
     UNUSED(name);
     UNUSED(arg);
@@ -77,24 +80,24 @@ PROTOTYPES:	ENABLE
 
 BOOT:
 	if (lzo_init() != LZO_E_OK)
-		croak("Compress::LZO lzo_init() failed\n") ;
+		croak("Compress::LZO lzo_init() failed\n");
 
 
 #define X_LZO_VERSION()         lzo_version()
 unsigned
 X_LZO_VERSION()
 
-#define X_LZO_VERSION_STRING()  (char*)lzo_version_string()
-char *
+#define X_LZO_VERSION_STRING()  (const char *)lzo_version_string()
+const char *
 X_LZO_VERSION_STRING()
 
-#define X_LZO_VERSION_DATE()    (char*)lzo_version_date()
-char *
+#define X_LZO_VERSION_DATE()    (const char *)lzo_version_date()
+const char *
 X_LZO_VERSION_DATE()
 
 double
 constant(name, arg)
-		char *     name
+		const char *     name
 		int        arg
 
 
@@ -245,7 +248,7 @@ X_adler32(string, adler = adlerInitial)
 		if (items == 2 && SvOK(ST(1)))
 			RETVAL = SvUV(ST(1));
 		else
-			RETVAL = lzo_adler32(0, NULL, 0);
+			RETVAL = 1;
 		RETVAL = lzo_adler32(RETVAL, buf, (lzo_uint)len);
 	OUTPUT:
 		RETVAL
@@ -263,7 +266,7 @@ X_crc32(string, crc = crcInitial)
 		if (items == 2 && SvOK(ST(1)))
 			RETVAL = SvUV(ST(1));
 		else
-			RETVAL = lzo_crc32(0, NULL, 0);
+			RETVAL = 0;
 		RETVAL = lzo_crc32(RETVAL, buf, (lzo_uint)len);
 	OUTPUT:
 		RETVAL
